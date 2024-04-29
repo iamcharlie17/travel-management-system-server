@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -35,11 +36,35 @@ async function run() {
 
     const travelCollection = client.db('travelDB').collection('travelCollection')
 
-   app.post('/travel', async(req, res)=>{
+   app.post('/all-tourist-spots', async(req, res)=>{
     const info = req.body;
     console.log(info)
     const result = await travelCollection.insertOne(info)
     res.send(result)
+   })
+
+   app.get('/all-tourist-spots', async(req, res)=>{
+    const cursor = travelCollection.find()
+    const result = await cursor.toArray()
+    res.send(result)
+   })
+
+   //read data for mylist
+   app.get('/my-list/:id', async(req,res)=>{
+    const id = req.params.id;
+    console.log(id)
+    const query = {email: id}
+    const result = await travelCollection.findOne(query)
+    res.send(result)
+   })
+
+   // delete a tourist spot
+   app.delete('/tourist-spot/:id', async(req, res)=>{
+    const id = req.params.id;
+    const query = {_id : new ObjectId(id)}
+    const result = await travelCollection.deleteOne(query)
+    res.send(result)
+
    })
 
     await client.db("admin").command({ ping: 1 });
