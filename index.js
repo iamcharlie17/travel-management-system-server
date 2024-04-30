@@ -30,10 +30,18 @@ async function run() {
     // await client.connect();
     // Send a ping to confirm a successful connection
 
+    //travel collection
     const travelCollection = client
       .db("travelDB")
       .collection("travelCollection");
 
+    //countries collection
+
+    const countryCollection = client
+      .db("countryDB")
+      .collection("countryCollection");
+
+    //post tourist spots
     app.post("/all-tourist-spots", async (req, res) => {
       const info = req.body;
       console.log(info);
@@ -41,6 +49,57 @@ async function run() {
       res.send(result);
     });
 
+    //post countries
+
+    const countries = [
+      {
+        imageUrl: "https://i.ibb.co/0ZMF4xY/bangladesh.jpg",
+        countryName: "Bangladesh",
+        shortDescription:
+          "Bangladesh, a South Asian country, is known for its lush greenery, rich history, and vibrant culture.",
+      },
+      {
+        imageUrl: "https://i.ibb.co/7QWNqtP/thailand.jpg",
+        countryName: "Thailand",
+        shortDescription:
+          "Thailand, a Southeast Asian country, is famous for its ornate temples, beautiful beaches, and delicious cuisine.",
+      },
+      {
+        imageUrl: "https://i.ibb.co/0G0TWRT/indonesia.jpg",
+        countryName: "Indonesia",
+        shortDescription:
+          "Indonesia, an archipelago in Southeast Asia, is renowned for its diverse landscapes, ancient temples, and rich biodiversity.",
+      },
+      {
+        imageUrl: "https://i.ibb.co/WkkC4XM/malaysia.jpg",
+        countryName: "Malaysia",
+        shortDescription:
+          "Malaysia, a Southeast Asian country, is known for its modern cities, stunning islands, and multicultural society.",
+      },
+      {
+        imageUrl: "https://i.ibb.co/4tN5c6s/vietnam.jpg",
+        countryName: "Vietnam",
+        shortDescription:
+          "Vietnam, a Southeast Asian country, is famous for its lush countryside, bustling cities, and delicious street food.",
+      },
+      {
+        imageUrl: "https://i.ibb.co/HpmxYgs/combodia.webp",
+        countryName: "Cambodia",
+        shortDescription:
+          "Cambodia, a Southeast Asian country, is home to ancient temples, lush jungles, and a rich cultural heritage.",
+      },
+    ];
+
+    const result = await countryCollection.insertMany(countries);
+    console.log(`${result.insertedCount} documents were inserted`);
+
+    //get countries
+    app.get("/countries", async (req, res) => {
+      const result = await countryCollection.find().toArray();
+      res.send(result);
+    });
+
+    //get tourist spots
     app.get("/all-tourist-spots", async (req, res) => {
       const cursor = travelCollection.find();
       const result = await cursor.toArray();
@@ -77,8 +136,12 @@ async function run() {
           imageUrl: spot.imageUrl,
         },
       };
-      const result = await travelCollection.updateOne(filter, updatedSpot, options)
-      res.send(result)
+      const result = await travelCollection.updateOne(
+        filter,
+        updatedSpot,
+        options
+      );
+      res.send(result);
     });
 
     //read data for mylist
