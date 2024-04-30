@@ -49,6 +49,14 @@ async function run() {
     res.send(result)
    })
 
+   //get data for update
+   app.get('/update-details/:id', async(req, res)=>{
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)}
+    const result = await travelCollection.findOne(query)
+    res.send(result)
+})
+
    //read data for mylist
    app.get('/my-list/:email', async(req,res)=>{
     const email = req.params.email;
