@@ -50,11 +50,11 @@ async function run() {
    })
 
    //read data for mylist
-   app.get('/my-list/:id', async(req,res)=>{
-    const id = req.params.id;
-    console.log(id)
-    const query = {email: id}
-    const result = await travelCollection.findOne(query)
+   app.get('/my-list/:email', async(req,res)=>{
+    const email = req.params.email;
+    // console.log(email)
+    const query = {email:email}
+    const result = await travelCollection.find(query).toArray()
     res.send(result)
    })
 
