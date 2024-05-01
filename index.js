@@ -106,6 +106,13 @@ async function run() {
       res.send(result);
     });
 
+    //get sorted tourist spots
+    app.get('/all-tourist-spots/sort-by-average-cost', async(req, res)=>{
+        const result = await travelCollection.find().sort({averageCost: 1}).toArray()
+        res.send(result)
+    })
+
+    
     //get data for update
     app.get("/update-details/:id", async (req, res) => {
       const id = req.params.id;
